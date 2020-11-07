@@ -7,7 +7,7 @@
 
 <ul>
     @foreach($blogs as $blog)
-    <li>{{ $blog->title }}</li>
+    <li>{{ $blog->title }}　{{ $blog->user->name }}</li>
     @endforeach
 </ul>
 

@@ -25,7 +25,10 @@ class BlogViewControllerTest extends TestCase
             ->assertOk()
             ->assertSee($blog1->title)
             ->assertSee($blog2->title)
-            ->assertSee($blog3->title);
+            ->assertSee($blog3->title)
+            ->assertSee($blog1->user->name)
+            ->assertSee($blog2->user->name)
+            ->assertSee($blog3->user->name);
 
         // Blog::factory()->create(['title' => 'あいうえお']);
         // Blog::factory()->create(['title' => 'かきくけこ']);
@@ -38,5 +41,21 @@ class BlogViewControllerTest extends TestCase
         //     ->assertSee('さしすせそ');
 
 
+    }
+
+    /** @test  */
+    function factoryの観察()
+    {
+        // $blog = Blog::factory()->create();
+        // $blog = Blog::factory()->create(['user_id' => 5]);
+        // $blog = Blog::factory()->make(['user_id' => null]);
+
+        // dump($blog->toArray());
+        // dump(Blog::count());
+
+        // dump(User::get()->toArray());
+        // dump(User::count());
+
+        $this->assertTrue(true);
     }
 }
