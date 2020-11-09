@@ -7,7 +7,7 @@
 
 <ul>
     @foreach($blogs as $blog)
-    <li>{{ $blog->title }}　{{ $blog->user->name }}　（{{ $blog->comments_count }}件のコメント）</li>
+    <li><a href="/blogs/{{ $blog->id }}">{{ $blog->title }}</a>　{{ $blog->user->name }}　（{{ $blog->comments_count }}件のコメント）</li>
     @endforeach
 </ul>
 
