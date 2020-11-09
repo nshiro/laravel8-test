@@ -11,6 +11,7 @@ class BlogViewController extends Controller
     {
         // $blogs = Blog::get();
         $blogs = Blog::with('user')
+            ->onlyOpen()  // ->where('status', Blog::OPEN)
             ->withCount('comments')
             ->orderByDesc('comments_count')
             ->get();

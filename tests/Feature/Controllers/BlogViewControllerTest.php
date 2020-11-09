@@ -43,8 +43,23 @@ class BlogViewControllerTest extends TestCase
         //     ->assertSee('あいうえお')
         //     ->assertSee('かきくけこ')
         //     ->assertSee('さしすせそ');
+    }
 
+    /** @test index */
+    function ブログの一覧、非公開のブログは表示されない()
+    {
+        Blog::factory()->create([
+            'status' => Blog::CLOSED,
+            'title' => 'ブログA',
+            ]);
+        Blog::factory()->create(['title' => 'ブログB']);
+        Blog::factory()->create(['title' => 'ブログC']);
 
+        $this->get('/')
+            ->assertOk()
+            ->assertDontSee('ブログA')
+            ->assertSee('ブログB')
+            ->assertSee('ブログC');
     }
 
     /** @test  */
