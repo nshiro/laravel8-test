@@ -3,6 +3,7 @@
 namespace Tests\Feature\Controllers;
 
 use App\Models\Blog;
+use App\Models\Comment;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -63,14 +64,39 @@ class BlogViewControllerTest extends TestCase
     }
 
     /** @test show */
-    function ブログの詳細画面が表示できる()
+    function ブログの詳細画面が表示でき、コメントが古い順に表示される()
     {
-        $blog = Blog::factory()->create();
+        // $blog = Blog::factory()->create();
+
+        // Comment::factory()->create([
+        //     'created_at' => now()->sub('2 days'),
+        //     'name' => '太郎',
+        //     'blog_id' => $blog->id,
+        // ]);
+        // Comment::factory()->create([
+        //     'created_at' => now()->sub('3 days'),
+        //     'name' => '次郎',
+        //     'blog_id' => $blog->id,
+        // ]);
+        // Comment::factory()->create([
+        //     'created_at' => now()->sub('1 days'),
+        //     'name' => '三郎',
+        //     'blog_id' => $blog->id,
+        // ]);
+
+        $blog = Blog::factory()->withCommentsData([
+            ['created_at' => now()->sub('2 days'), 'name' => '太郎'],
+            ['created_at' => now()->sub('3 days'), 'name' => '次郎'],
+            ['created_at' => now()->sub('1 days'), 'name' => '三郎'],
+        ])->create();
+
+        //dd($blog->comments->toArray());
 
         $this->get('blogs/'.$blog->id)
             ->assertOk()
             ->assertSee($blog->title)
-            ->assertSee($blog->user->name);
+            ->assertSee($blog->user->name)
+            ->assertSeeInOrder(['次郎', '太郎', '三郎']);
     }
 
     /** @test show */
