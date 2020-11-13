@@ -10,6 +10,9 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
+/**
+ * @see \App\Http\Controllers\BlogViewController
+ */
 class BlogViewControllerTest extends TestCase
 {
     use RefreshDatabase;
