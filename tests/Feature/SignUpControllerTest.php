@@ -21,6 +21,15 @@ class SignUpControllerTest extends TestCase
             ->assertOk();
     }
 
+    private function validData($overrides = [])
+    {
+        return array_merge([
+            'name' => '太郎',
+            'email' => 'aaa@bbb.net',
+            'password' => 'abcd1234',
+        ], $overrides);
+    }
+
     /** @test store */
     function ユーザー登録できる()
     {
@@ -30,11 +39,16 @@ class SignUpControllerTest extends TestCase
 
         // $this->withoutExceptionHandling();
 
-        $validData = [
-            'name' => '太郎',
-            'email' => 'aaa@bbb.net',
-            'password' => 'abcd1234',
-        ];
+        // $validData = [
+        //     'name' => '太郎',
+        //     'email' => 'aaa@bbb.net',
+        //     'password' => 'abcd1234',
+        // ];
+
+        // $validData = $this->validData();
+        // $validData = User::factory()->make()->toArray();
+        // $validData = User::factory()->valid()->raw();
+        $validData = User::factory()->validData();
 
         $this->post('signup', $validData)
             ->assertOk();
