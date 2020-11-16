@@ -21,10 +21,14 @@ class SignUpController extends Controller
             'password' => ['required', 'min:8'],
         ]);
 
-        User::create([
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
         ]);
+
+        auth()->login($user);
+
+        return redirect('mypage/blogs');
     }
 }

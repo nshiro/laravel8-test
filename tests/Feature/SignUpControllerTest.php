@@ -51,7 +51,7 @@ class SignUpControllerTest extends TestCase
         $validData = User::factory()->validData();
 
         $this->post('signup', $validData)
-            ->assertOk();
+            ->assertRedirect('mypage/blogs');
 
         unset($validData['password']);
 
@@ -63,7 +63,7 @@ class SignUpControllerTest extends TestCase
 
         $this->assertTrue(\Hash::check('abcd1234', $user->password));
 
-
+        $this->assertAuthenticatedAs($user);
     }
 
     /** @test store */
