@@ -79,4 +79,21 @@ class BlogMypageControllerTest extends TestCase
         $this->assertDatabaseHas('blogs', $validData);
     }
 
+    /** @test store */
+    function マイページ、ブログの登録時の入力チェック()
+    {
+        $url = 'mypage/blogs/create';
+
+        $this->login();
+
+        // $this->from($url)->post($url, [])
+        //     ->assertRedirect($url);
+
+        app()->setlocale('testing');
+
+        $this->post($url, ['title' => ''])->assertSessionHasErrors(['title' => 'required']);
+        $this->post($url, ['title' => str_repeat('a', 256)])->assertSessionHasErrors(['title' => 'max']);
+        $this->post($url, ['title' => str_repeat('a', 255)])->assertSessionDoesntHaveErrors(['title' => 'max']);
+        $this->post($url, ['body' => ''])->assertSessionHasErrors(['body' => 'required']);
+    }
 }
