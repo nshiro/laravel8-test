@@ -9,4 +9,19 @@
 <hr>
 
 
+<table>
+    <tr>
+        <th>ブログ名</th>
+    </tr>
+
+    @foreach($blogs as $blog)
+    <tr>
+        <td>
+            {{ $blog->title }}
+        </td>
+    </tr>
+    @endforeach
+</table>
+
+
 @endsection
