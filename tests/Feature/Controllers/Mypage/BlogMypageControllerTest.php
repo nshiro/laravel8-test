@@ -22,6 +22,7 @@ class BlogMypageControllerTest extends TestCase
 
         $this->get('mypage/blogs')->assertRedirect($url);
         $this->get('mypage/blogs/create')->assertRedirect($url);
+        $this->post('mypage/blogs/create', [])->assertRedirect($url);
     }
 
     /** @test index */
@@ -47,4 +48,35 @@ class BlogMypageControllerTest extends TestCase
         $this->get('mypage/blogs/create')
             ->assertOk();
     }
+
+    /** @test store */
+    function マイページ、ブログを新規登録できる、公開の場合()
+    {
+        $this->login();
+
+        $validData = Blog::factory()->validData();
+
+        $this->post('mypage/blogs/create', $validData)
+            ->assertRedirect('mypage/blogs/edit/1'); // SQLite のインメモリ
+
+        $this->assertDatabaseHas('blogs', $validData);
+    }
+
+    /** @test store */
+    function マイページ、ブログを新規登録できる、非公開の場合()
+    {
+        $this->login();
+
+        $validData = Blog::factory()->validData();
+
+        unset($validData['status']);
+
+        $this->post('mypage/blogs/create', $validData)
+            ->assertRedirect('mypage/blogs/edit/1'); // SQLite のインメモリ
+
+        $validData['status'] = '0';
+
+        $this->assertDatabaseHas('blogs', $validData);
+    }
+
 }
