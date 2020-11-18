@@ -21,6 +21,7 @@ class BlogMypageControllerTest extends TestCase
         $url = 'mypage/login';
 
         $this->get('mypage/blogs')->assertRedirect($url);
+        $this->get('mypage/blogs/create')->assertRedirect($url);
     }
 
     /** @test index */
@@ -36,5 +37,14 @@ class BlogMypageControllerTest extends TestCase
             ->assertOk()
             ->assertDontSee($other->title)
             ->assertSee($myblog->title);
+    }
+
+    /** @test create */
+    function マイページ、ブログの新規登録画面を開ける()
+    {
+        $this->login();
+
+        $this->get('mypage/blogs/create')
+            ->assertOk();
     }
 }

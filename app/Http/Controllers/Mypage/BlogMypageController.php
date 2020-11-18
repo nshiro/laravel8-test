@@ -15,4 +15,9 @@ class BlogMypageController extends Controller
 
         return view('mypage.blog.index', compact('blogs'));
     }
+
+    public function create()
+    {
+        return view('mypage.blog.create');
+    }
 }
