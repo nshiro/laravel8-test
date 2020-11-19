@@ -25,6 +25,7 @@ class BlogMypageControllerTest extends TestCase
         $this->post('mypage/blogs/create', [])->assertRedirect($url);
         $this->get('mypage/blogs/edit/1')->assertRedirect($url);
         $this->post('mypage/blogs/edit/1')->assertRedirect($url);
+        $this->delete('mypage/blogs/delete/1')->assertRedirect($url);
     }
 
     /** @test index */
@@ -135,7 +136,28 @@ class BlogMypageControllerTest extends TestCase
     /** @test destroy */
     function 他人様のブログを削除はできない()
     {
-        $this->markTestIncomplete('まだ');
+        $blog = Blog::factory()->create();
+
+        $this->login();
+
+        $this->delete('mypage/blogs/delete/'.$blog->id)
+            ->assertForbidden();
+
+        $this->assertCount(1, Blog::all());
+    }
+
+    /** @test destroy */
+    function 自分のブログは削除できる()
+    {
+        $blog = Blog::factory()->create();
+
+        $this->login($blog->user);
+
+        $this->delete('mypage/blogs/delete/'.$blog->id)
+            ->assertRedirect('mypage/blogs');
+
+        // $this->assertDatabaseMissing('blogs', ['id' => $blog->id]);  // $blog->only('id)
+        $this->assertDeleted($blog);
     }
 
     /** @test edit */
