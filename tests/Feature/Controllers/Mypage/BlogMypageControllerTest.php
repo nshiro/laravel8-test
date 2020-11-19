@@ -24,6 +24,7 @@ class BlogMypageControllerTest extends TestCase
         $this->get('mypage/blogs/create')->assertRedirect($url);
         $this->post('mypage/blogs/create', [])->assertRedirect($url);
         $this->get('mypage/blogs/edit/1')->assertRedirect($url);
+        $this->post('mypage/blogs/edit/1')->assertRedirect($url);
     }
 
     /** @test index */
@@ -130,5 +131,45 @@ class BlogMypageControllerTest extends TestCase
 
         $this->get('mypage/blogs/edit/'.$blog->id)
             ->assertOk();
+    }
+
+    /** @test update */
+    function 自分のブログは更新できる()
+    {
+        $validData = [
+            'title' => '新タイトル',
+            'body' => '新本文',
+            'status' => '1',
+        ];
+
+        $blog = Blog::factory()->create();
+
+        $this->login($blog->user);
+
+        $this->post('mypage/blogs/edit/'.$blog->id, $validData)
+            ->assertRedirect('mypage/blogs/edit/'.$blog->id);
+
+        $this->get('mypage/blogs/edit/'.$blog->id)
+            ->assertSee('ブログを更新しました');
+
+        // 新規で追加されたかも知れない。なので不完全と言えば、不完全
+        $this->assertDatabaseHas('blogs', $validData);
+
+        $this->assertCount(1, Blog::all());
+        $this->assertEquals(1, Blog::count());
+
+        // 項目が少ない時は、fresh()を使って
+        $this->assertEquals('新タイトル', $blog->fresh()->title);
+        $this->assertEquals('新本文', $blog->fresh()->body);
+
+        // 項目が多い時は、refresh()を使って
+        $blog->refresh();
+        $this->assertEquals('新本文', $blog->body);
+        $this->assertEquals('新本文', $blog->body);
+        $this->assertEquals('新本文', $blog->body);
+        $this->assertEquals('新本文', $blog->body);
+        $this->assertEquals('新本文', $blog->body);
+        $this->assertEquals('新本文', $blog->body);
+        $this->assertEquals('新本文', $blog->body);
     }
 }
