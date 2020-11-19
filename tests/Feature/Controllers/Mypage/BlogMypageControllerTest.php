@@ -23,6 +23,7 @@ class BlogMypageControllerTest extends TestCase
         $this->get('mypage/blogs')->assertRedirect($url);
         $this->get('mypage/blogs/create')->assertRedirect($url);
         $this->post('mypage/blogs/create', [])->assertRedirect($url);
+        $this->get('mypage/blogs/edit/1')->assertRedirect($url);
     }
 
     /** @test index */
@@ -95,5 +96,39 @@ class BlogMypageControllerTest extends TestCase
         $this->post($url, ['title' => str_repeat('a', 256)])->assertSessionHasErrors(['title' => 'max']);
         $this->post($url, ['title' => str_repeat('a', 255)])->assertSessionDoesntHaveErrors(['title' => 'max']);
         $this->post($url, ['body' => ''])->assertSessionHasErrors(['body' => 'required']);
+    }
+
+    /** @test edit */
+    function 他人様のブログの編集画面は開けない()
+    {
+        $blog = Blog::factory()->create();
+
+        $this->login();
+
+        $this->get('mypage/blogs/edit/'.$blog->id)
+            ->assertForbidden();
+    }
+
+    /** @test update */
+    function 他人様のブログは更新できない()
+    {
+        $this->markTestIncomplete('まだ');
+    }
+
+    /** @test destroy */
+    function 他人様のブログを削除はできない()
+    {
+        $this->markTestIncomplete('まだ');
+    }
+
+    /** @test edit */
+    function 自分のブログの編集画面は開ける()
+    {
+        $blog = Blog::factory()->create();
+
+        $this->login($blog->user);
+
+        $this->get('mypage/blogs/edit/'.$blog->id)
+            ->assertOk();
     }
 }
