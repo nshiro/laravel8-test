@@ -89,8 +89,8 @@ class BlogMypageControllerTest extends TestCase
 
         $this->login();
 
-        // $this->from($url)->post($url, [])
-        //     ->assertRedirect($url);
+        $this->from($url)->post($url, [])
+            ->assertRedirect($url);
 
         app()->setlocale('testing');
 
