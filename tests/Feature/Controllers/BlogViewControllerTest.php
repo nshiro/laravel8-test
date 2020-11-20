@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Controllers;
 
+use Facades\Illuminate\Support\Str;
 use App\Http\Middleware\BlogShowLimit;
 use App\Models\Blog;
 use App\Models\Comment;
@@ -136,6 +137,21 @@ class BlogViewControllerTest extends TestCase
         $this->get('blogs/'. $blog->id)
             ->assertOk()
             ->assertSee('メリークリスマス！');
+    }
+
+    /** @test show */
+    function ブログの詳細画面で、ランダムな文字列が10文字表示される()
+    {
+        $this->withoutMiddleware(BlogShowLimit::class);
+
+        $blog = Blog::factory()->create();
+
+        Str::shouldReceive('random')
+            ->once()->with(10)->andReturn('HELLO_RAND');
+
+        $this->get('blogs/'.$blog->id)
+            ->assertOk()
+            ->assertSee('HELLO_RAND');
     }
 
     /** @test  */
