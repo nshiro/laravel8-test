@@ -7,6 +7,7 @@ use App\Http\Middleware\BlogShowLimit;
 use App\Models\Blog;
 use App\Models\Comment;
 use App\Models\User;
+use App\StrRandom;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -143,11 +144,35 @@ class BlogViewControllerTest extends TestCase
     function ブログの詳細画面で、ランダムな文字列が10文字表示される()
     {
         $this->withoutMiddleware(BlogShowLimit::class);
+        $this->withoutExceptionHandling();
 
         $blog = Blog::factory()->create();
 
-        Str::shouldReceive('random')
-            ->once()->with(10)->andReturn('HELLO_RAND');
+        // Str::shouldReceive('random')
+        //     ->once()->with(10)->andReturn('HELLO_RAND');
+
+        // $mock = new Class ()
+        // {
+        //     public function random(int $len)
+        //     {
+        //         if ($len !== 10) {
+        //             // return 'hoge';
+        //             throw new \Exception('引数違う');
+        //         }
+        //         return 'HELLO_RAND';
+        //     }
+        // };
+
+        // $this->app->instance(StrRandom::class, $mock);
+
+
+        // $mock = \Mockery::mock(StrRandom::class);
+        // $mock->shouldReceive('random')->once()->with(10)->andReturn('HELLO_RAND');
+        // $this->app->instance(StrRandom::class, $mock);
+
+        $this->mock(StrRandom::class, function ($mock) {
+            $mock->shouldReceive('random')->once()->with(10)->andReturn('HELLO_RAND');
+        });
 
         $this->get('blogs/'.$blog->id)
             ->assertOk()
